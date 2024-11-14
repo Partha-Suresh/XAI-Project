@@ -4,7 +4,7 @@
 
 -   Partha Suresh
 -   Nitin Bhaskar
--   Srikar S
+-   [Srikar S](https://github.com/Mystery-Coder)
 -   Suraj S
 -   [Nishant Hegde](https://github.com/NishantHegde2305)
 
