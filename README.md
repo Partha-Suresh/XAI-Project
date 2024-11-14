@@ -3,7 +3,7 @@
 ## Authors:
 
 -   Partha Suresh
--   Nitin Bhaskar
+-   [Nitin Bhaskar](https://github.com/nitinbhaskar7)
 -   [Srikar S](https://github.com/Mystery-Coder)
 -   Suraj S
 -   [Nishant Hegde](https://github.com/NishantHegde2305)
