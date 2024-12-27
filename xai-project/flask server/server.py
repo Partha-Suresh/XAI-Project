@@ -2,20 +2,22 @@ from flask import Flask, request, render_template, jsonify
 #from flask_cors import CORS
 import requests
 import joblib
+from dotenv import dotenv_values
 
+config = dotenv_values(".env")
 
 app = Flask(__name__)
 
 model1 = joblib.load("C:\\Users\\Srikar\\Downloads\\trained_model.joblib")
 model2=joblib.load("C:\\Users\\Srikar\\Downloads\\logistic_regression_model.joblib")
 
-GEOAPIFY_API_KEY = "33a13f099986448085e4521b377e0f43"
+
 GEOAPIFY_URL = "https://api.geoapify.com/v1/geocode/search"
 
 def get_coordinates(location):
     try:
         # Construct the full URL with location and API key
-        url = f"{GEOAPIFY_URL}?text={location}&apiKey={GEOAPIFY_API_KEY}"
+        url = f"{GEOAPIFY_URL}?text={location}&apiKey={config['GEOAPIFY_API_KEY']}"
 
         # Make the request to the Geoapify API
         response = requests.get(url)
