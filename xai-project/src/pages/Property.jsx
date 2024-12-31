@@ -5,7 +5,10 @@ import {
     MenuItem,
     TextField,
     Button,
+    Card,
 } from "@mui/material";
+
+import SendIcon from "@mui/icons-material/Send";
 import { useState } from "react";
 
 // import { mapCity } from "../Helper";
@@ -13,9 +16,10 @@ import { useState } from "react";
 const rowStyle = {
     display: "flex",
     flexDirection: "row",
-    gap: 25,
+    justifyContent: "space-between", // Even spacing between items
+    gap: 20, // Adjust gap to create uniform space
+    alignItems: "center", // Align items vertically
 };
-
 const url = "http://127.0.0.1:5000/predict_property";
 
 export default function Property() {
@@ -78,149 +82,173 @@ export default function Property() {
                 height: "100vh",
                 maxWidth: "1300px",
                 margin: "0 auto",
+                padding: 2, // Add padding to prevent content from being cut off
             }}
         >
+            {/*Full Page Box*/}
             <Typography variant="h2" sx={{ mt: 5, mb: 5 }}>
                 Property Valuation
             </Typography>
-            <Typography variant="h5">
+            <Typography variant="h5" sx={{ mb: 8 }}>
                 We have trained a Random Forest Regressor Model to predict
                 property valuations using a dataset with key features such as
                 RERA approval, location, BHK (number of bedrooms, hall,
                 kitchen), square footage, whether a property is ready to move,
                 etc.
             </Typography>
+            {/*Form Card*/}
             <Box
-                component="form"
-                onSubmit={handleSubmit}
                 sx={{
                     display: "flex",
                     flexDirection: "column",
-                    gap: 2,
-                    width: "700px",
+                    gap: 4, // Increase gap between rows
+                    maxWidth: "1100px",
                     margin: "0 auto",
+                    padding: 4, // Uniform padding
+                    border: "1px solid #ccc",
+                    borderRadius: 2,
                 }}
             >
                 <Box sx={rowStyle}>
                     <Typography variant="h6">Posted By:</Typography>
                     <Select
                         name="posted_by"
-                        value={formData.posted_by}
+                        defaultValue={formData.posted_by}
                         onChange={handleChange}
                     >
                         <MenuItem value={"0"}>Owner</MenuItem>
                         <MenuItem value={"1"}>Dealer</MenuItem>
                         <MenuItem value={"2"}>Builder</MenuItem>
                     </Select>
-                </Box>
-
-                <Box sx={rowStyle}>
                     <Typography variant="h6">
                         Is the property under construction?
                     </Typography>
                     <Select
                         name="under_construction"
-                        value={formData.under_construction}
+                        defaultValue={formData.under_construction}
                         onChange={handleChange}
                     >
                         <MenuItem value={"0"}>No</MenuItem>
                         <MenuItem value={"1"}>Yes</MenuItem>
                     </Select>
                 </Box>
+
                 <Box sx={rowStyle}>
                     <Typography variant="h6">RERA Approved:</Typography>
                     <Select
                         name="rera"
-                        value={formData.rera}
+                        defaultValue={formData.rera}
                         onChange={handleChange}
                     >
                         <MenuItem value={"0"}>No</MenuItem>
                         <MenuItem value={"1"}>Yes</MenuItem>
                     </Select>
-                </Box>
-                <Box sx={rowStyle}>
-                    <Typography variant="h6">BHK</Typography>
+
+                    <Typography variant="h6">Enter BHK</Typography>
                     <TextField
                         name="bhk"
-                        value={formData.bhk}
+                        // defaultValue={formData.bhk}
                         onChange={handleChange}
-                    />
-                </Box>
-                <Box sx={rowStyle}>
-                    <Typography variant="h6">Enter Square Feet</Typography>
-                    <TextField
-                        name="square_feet"
-                        value={formData.square_feet}
-                        onChange={handleChange}
+                        label="BHK"
                     />
                 </Box>
 
                 <Box sx={rowStyle}>
+                    <Typography variant="h6">Enter Square Feet</Typography>
+                    <TextField
+                        name="square_feet"
+                        // value={formData.square_feet}
+                        onChange={handleChange}
+                        label="Square Feet"
+                    />
                     <Typography variant="h6">Is it ready to move?</Typography>
                     <Select
                         name="ready_to_move"
-                        value={formData.ready_to_move}
+                        defaultValue={formData.ready_to_move}
                         onChange={handleChange}
                     >
                         <MenuItem value={"0"}>No</MenuItem>
                         <MenuItem value={"1"}>Yes</MenuItem>
                     </Select>
                 </Box>
+
                 <Box sx={rowStyle}>
                     <Typography variant="h6">
                         Is it a resale property?
                     </Typography>
                     <Select
                         name="resale"
-                        value={formData.resale}
+                        defaultValue={formData.resale}
                         onChange={handleChange}
                     >
                         <MenuItem value={"0"}>No</MenuItem>
                         <MenuItem value={"1"}>Yes</MenuItem>
                     </Select>
-                </Box>
-                <Box sx={rowStyle}>
+
                     <Typography variant="h6">Enter Locality</Typography>
                     <TextField
                         name="locality"
-                        value={formData.locality}
+                        // value={formData.locality}
                         onChange={handleChange}
                         multiline={true}
+                        label="Locality"
                     />
                 </Box>
 
-                <Box sx={rowStyle}>
+                <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
                     <Typography variant="h6">Enter City</Typography>
                     <TextField
                         name="city"
-                        value={formData.city}
+                        // value={formData.city}
                         onChange={handleChange}
+                        label="City"
                     />
                 </Box>
 
-                <Button
-                    variant="contained"
-                    type="submit"
+                <Box
                     sx={{
-                        textTransform: "none",
+                        display: "flex", // Use Flexbox
+                        justifyContent: "center", // Center horizontally
                     }}
                 >
-                    Predit Price
-                </Button>
+                    <Button
+                        variant="contained"
+                        type="submit"
+                        color="success"
+                        size="large"
+                        endIcon={<SendIcon />}
+                        sx={{
+                            textTransform: "none",
+                            fontSize: 21.5,
+                            maxWidth: 250,
+                            borderRadius: 2,
+                        }}
+                        onClick={handleSubmit}
+                    >
+                        Predict Price
+                    </Button>
+                </Box>
             </Box>{" "}
             {/*Form Box*/}
-            {price == 0 ? (
-                <Box sx={{ ...rowStyle, m: 10, p: 5 }}>
-                    <Typography>No Prediction Made</Typography>
-                </Box>
-            ) : (
-                <Box sx={{ ...rowStyle, m: 10, p: 5 }}>
-                    <Typography>
-                        {" "}
+            <Box
+                sx={{
+                    marginTop: 5, // Add space between the form and prediction result
+                    padding: 3,
+                    textAlign: "center",
+                    border: "1px solid #ccc",
+                    borderRadius: 2,
+                    width: "100%",
+                    maxWidth: "1050px",
+                }}
+            >
+                {price === 0 ? (
+                    <Typography variant="h6">No Prediction Made</Typography>
+                ) : (
+                    <Typography variant="h6">
                         Predicted Price By Model is Rs.{price} Lakh
                     </Typography>
-                </Box>
-            )}
+                )}
+            </Box>
         </Box> //Page Box End
     );
 }
