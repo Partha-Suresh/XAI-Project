@@ -1,25 +1,16 @@
 import {
     Typography,
-    Box,
     Select,
     MenuItem,
     TextField,
     Button,
-    Card,
 } from "@mui/material";
 
 import SendIcon from "@mui/icons-material/Send";
 import { useState } from "react";
+import { useEffect } from "react";
+import { useTheme } from "@/components/ui/theme-provider";
 
-// import { mapCity } from "../Helper";
-
-const rowStyle = {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between", // Even spacing between items
-    gap: 20, // Adjust gap to create uniform space
-    alignItems: "center", // Align items vertically
-};
 const url = "http://127.0.0.1:5000/predict_property";
 
 export default function Property() {
@@ -67,180 +58,166 @@ export default function Property() {
             },
             body: JSON.stringify(formData), // Convert data to JSON string
         });
+        console.log(response);
 
         const prediction = await response.json();
 
         setPrice(prediction["prediction"]);
     };
 
+    const [isDarkMode, setisDarkMode] = useState(false)
+    const { theme } = useTheme() 
+    useEffect(() => {
+        if(theme === 'dark'){
+            setisDarkMode(true)
+        }else{
+            setisDarkMode(false)
+        }
+    }, [theme])
+
     return (
-        <Box
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                height: "100vh",
-                maxWidth: "1300px",
-                margin: "0 auto",
-                padding: 2, // Add padding to prevent content from being cut off
-            }}
-        >
-            {/*Full Page Box*/}
-            <Typography variant="h2" sx={{ mt: 5, mb: 5 }}>
+        <div className="flex flex-col items-center h-screen max-w-5xl mx-auto p-4 dark:text-white">
+            <Typography variant="h2" className="mt-5 mb-5">
                 Property Valuation
             </Typography>
-            <Typography variant="h5" sx={{ mb: 8 }}>
+            <Typography variant="h5" className="mb-8">
                 We have trained a Random Forest Regressor Model to predict
                 property valuations using a dataset with key features such as
                 RERA approval, location, BHK (number of bedrooms, hall,
                 kitchen), square footage, whether a property is ready to move,
                 etc.
             </Typography>
-            {/*Form Card*/}
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 4, // Increase gap between rows
-                    maxWidth: "1100px",
-                    margin: "0 auto",
-                    padding: 4, // Uniform padding
-                    border: "1px solid #ccc",
-                    borderRadius: 2,
-                }}
-            >
-                <Box sx={rowStyle}>
-                    <Typography variant="h6">Posted By:</Typography>
-                    <Select
-                        name="posted_by"
-                        defaultValue={formData.posted_by}
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={"0"}>Owner</MenuItem>
-                        <MenuItem value={"1"}>Dealer</MenuItem>
-                        <MenuItem value={"2"}>Builder</MenuItem>
-                    </Select>
-                    <Typography variant="h6">
-                        Is the property under construction?
-                    </Typography>
-                    <Select
-                        name="under_construction"
-                        defaultValue={formData.under_construction}
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={"0"}>No</MenuItem>
-                        <MenuItem value={"1"}>Yes</MenuItem>
-                    </Select>
-                </Box>
+            <div className="flex flex-col gap-6 max-w-4xl mx-auto p-6 border border-gray-300 rounded-lg m-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col">
+                        <Typography variant="h6">Posted By:</Typography>
+                        <Select 
+                            className="bg-white text-black"
+                            name="posted_by"
+                            defaultValue={formData.posted_by}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value={"0"}>Owner</MenuItem>
+                            <MenuItem value={"1"}>Dealer</MenuItem>
+                            <MenuItem value={"2"}>Builder</MenuItem>
+                        </Select>
+                    </div>
+                    <div className="flex flex-col">
+                        <Typography variant="h6">Is the property under construction?</Typography>
+                        <Select
+                            className="bg-white text-black"
+                            name="under_construction"
+                            defaultValue={formData.under_construction}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value={"0"}>No</MenuItem>
+                            <MenuItem value={"1"}>Yes</MenuItem>
+                        </Select>
+                    </div>
+                </div>
 
-                <Box sx={rowStyle}>
-                    <Typography variant="h6">RERA Approved:</Typography>
-                    <Select
-                        name="rera"
-                        defaultValue={formData.rera}
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={"0"}>No</MenuItem>
-                        <MenuItem value={"1"}>Yes</MenuItem>
-                    </Select>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col">
+                        <Typography variant="h6">RERA Approved:</Typography>
+                        <Select
+                            className="bg-white text-black"
+                            name="rera"
+                            defaultValue={formData.rera}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value={"0"}>No</MenuItem>
+                            <MenuItem value={"1"}>Yes</MenuItem>
+                        </Select>
+                    </div>
+                    <div className="flex flex-col">
+                        <Typography variant="h6">Enter BHK</Typography>
+                        <TextField
+                            className="bg-white text-black"
+                            name="bhk"
+                            defaultValue={formData.bhk}
+                            onChange={handleChange}
+                            label="BHK"
+                        />
+                    </div>
+                </div>
 
-                    <Typography variant="h6">Enter BHK</Typography>
-                    <TextField
-                        name="bhk"
-                        // defaultValue={formData.bhk}
-                        onChange={handleChange}
-                        label="BHK"
-                    />
-                </Box>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col">
+                        <Typography variant="h6">Enter Square Feet</Typography>
+                        <TextField
+                            className="bg-white text-black"
+                            name="square_feet"
+                            value={formData.square_feet}
+                            onChange={handleChange}
+                            label="Square Feet"
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <Typography variant="h6">Is it ready to move?</Typography>
+                        <Select
+                            className="bg-white text-black"
+                            name="ready_to_move"
+                            defaultValue={formData.ready_to_move}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value={"0"}>No</MenuItem>
+                            <MenuItem value={"1"}>Yes</MenuItem>
+                        </Select>
+                    </div>
+                </div>
 
-                <Box sx={rowStyle}>
-                    <Typography variant="h6">Enter Square Feet</Typography>
-                    <TextField
-                        name="square_feet"
-                        // value={formData.square_feet}
-                        onChange={handleChange}
-                        label="Square Feet"
-                    />
-                    <Typography variant="h6">Is it ready to move?</Typography>
-                    <Select
-                        name="ready_to_move"
-                        defaultValue={formData.ready_to_move}
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={"0"}>No</MenuItem>
-                        <MenuItem value={"1"}>Yes</MenuItem>
-                    </Select>
-                </Box>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col">
+                        <Typography variant="h6">Is it a resale property?</Typography>
+                        <Select
+                            className="bg-white text-black"
+                            name="resale"
+                            defaultValue={formData.resale}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value={"0"}>No</MenuItem>
+                            <MenuItem value={"1"}>Yes</MenuItem>
+                        </Select>
+                    </div>
+                    <div className="flex flex-col">
+                        <Typography variant="h6">Enter Locality</Typography>
+                        <TextField
+                            className="bg-white text-black"
+                            name="locality"
+                            value={formData.locality}
+                            onChange={handleChange}
+                            multiline={true}
+                            label="Locality"
+                        />
+                    </div>
+                </div>
 
-                <Box sx={rowStyle}>
-                    <Typography variant="h6">
-                        Is it a resale property?
-                    </Typography>
-                    <Select
-                        name="resale"
-                        defaultValue={formData.resale}
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={"0"}>No</MenuItem>
-                        <MenuItem value={"1"}>Yes</MenuItem>
-                    </Select>
-
-                    <Typography variant="h6">Enter Locality</Typography>
-                    <TextField
-                        name="locality"
-                        // value={formData.locality}
-                        onChange={handleChange}
-                        multiline={true}
-                        label="Locality"
-                    />
-                </Box>
-
-                <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
+                <div className="flex flex-col">
                     <Typography variant="h6">Enter City</Typography>
                     <TextField
+                        className="bg-white text-black"
                         name="city"
-                        // value={formData.city}
+                        value={formData.city}
                         onChange={handleChange}
                         label="City"
                     />
-                </Box>
+                </div>
 
-                <Box
-                    sx={{
-                        display: "flex", // Use Flexbox
-                        justifyContent: "center", // Center horizontally
-                    }}
-                >
+                <div className="flex justify-center mt-6">
                     <Button
                         variant="contained"
                         type="submit"
                         color="success"
                         size="large"
                         endIcon={<SendIcon />}
-                        sx={{
-                            textTransform: "none",
-                            fontSize: 21.5,
-                            maxWidth: 250,
-                            borderRadius: 2,
-                        }}
-                        onClick={handleSubmit}
+                        className="text-lg max-w-xs rounded-lg"
+                        onClick={(e) => { handleSubmit(e) }}
                     >
                         Predict Price
                     </Button>
-                </Box>
-            </Box>{" "}
-            {/*Form Box*/}
-            <Box
-                sx={{
-                    marginTop: 5, // Add space between the form and prediction result
-                    padding: 3,
-                    textAlign: "center",
-                    border: "1px solid #ccc",
-                    borderRadius: 2,
-                    width: "100%",
-                    maxWidth: "1050px",
-                }}
-            >
+                </div>
+            </div>
+            <div className="mt-6 p-6 text-center border border-gray-300 rounded-lg w-full max-w-4xl dark:bg-gray-800">
                 {price === 0 ? (
                     <Typography variant="h6">No Prediction Made</Typography>
                 ) : (
@@ -248,7 +225,7 @@ export default function Property() {
                         Predicted Price By Model is Rs.{price} Lakh
                     </Typography>
                 )}
-            </Box>
-        </Box> //Page Box End
+            </div>
+        </div>
     );
 }

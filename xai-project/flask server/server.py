@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, jsonify
-#from flask_cors import CORS
+from flask_cors import CORS
 import requests
 import joblib
 from dotenv import dotenv_values
@@ -7,7 +7,7 @@ from dotenv import dotenv_values
 config = dotenv_values(".env")
 
 app = Flask(__name__)
-
+CORS(app)
 model1 = joblib.load("C:\\Users\\Srikar\\Downloads\\trained_model.joblib")
 model2=joblib.load("C:\\Users\\Srikar\\Downloads\\logistic_regression_model.joblib")
 
